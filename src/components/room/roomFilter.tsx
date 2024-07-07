@@ -3,31 +3,30 @@ import {Room} from "../types";
 import {Button} from "../ui/button"
 
 type Props = {
-    data: Room[],
-    setFilteredData: (data: Room[]) => void
+    filteredRooms: Room[],
+    setFilteredRooms: (filteredRooms: Room[]) => void
 }
 
-const RoomType: React.FC<Props> = ({data, setFilteredData}) => {
+const RoomType: React.FC<Props> = ({filteredRooms, setFilteredRooms}) => {
     const [filter, setFilter] = useState("")
 
     const handleFilterChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         setFilter(e.target.value)
         if (e.target.value === "all") {
-            setFilteredData(data)
+            setFilteredRooms(filteredRooms)
         } else {
-            const filteredRooms = data.filter(room => room.roomType === e.target.value)
-            setFilteredData(filteredRooms)
+            setFilteredRooms(filteredRooms.filter(room => room.roomType === e.target.value))
         }
-    }, [data, setFilteredData]);
+    }, [filteredRooms, setFilteredRooms]);
 
     const clearFilter = useCallback(() => {
         setFilter("")
-        setFilteredData(data)
-    }, [data, setFilteredData]);
+        setFilteredRooms(filteredRooms)
+    }, [filteredRooms, setFilteredRooms]);
 
     const uniqueRoomTypes = useMemo(() => {
-        return Array.from(new Set(data.map(room => room.roomType)))
-    }, [data])
+        return Array.from(new Set(filteredRooms.map(room => room.roomType)))
+    }, [filteredRooms])
 
     return (
         <div className="flex items-center justify-between">
