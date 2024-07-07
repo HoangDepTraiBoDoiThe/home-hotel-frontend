@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import {getAllRooms} from "../../utils/ApiHelperFunctions.ts";
-import RoomFilter from "./roomFilter.tsx";
+import {Room} from "../types";
+import {RoomDataTable} from "./roomDataTable.tsx";
+import {RoomDataColumn} from "./roomDataColumn.tsx";
 
 const ExitingRoom = () => {
-  const [roomData, setRoomData] = useState([])
+  const [roomData, setRoomData] = useState<Room[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
   const fetchRoomData = async () => {
@@ -19,14 +21,13 @@ const ExitingRoom = () => {
 
   useEffect(() => {
     fetchRoomData().finally(() => {
-      setRoomData(null)
       setIsLoading(false)
     });
   }, []);
 
   return (
-      <div>
-        <RoomFilter data={roomData} setFilteredRooms={setRoomData}/>
+      <div className="container mx-auto py-10">
+        <RoomDataTable columns={RoomDataColumn} data={roomData} />
       </div>
   )
 }
