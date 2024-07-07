@@ -1,5 +1,6 @@
 export interface Room {
     id: number;
+    roomType: string;
     roomNumber: number;
     roomPrice: number;
     roomPic: string | null;

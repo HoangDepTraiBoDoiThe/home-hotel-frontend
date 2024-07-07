@@ -1,10 +1,12 @@
 import React from 'react'
+import AddRoom from "../../components/room/addRoom.tsx";
 
-type Props = {}
 
-const RoomPage = (props: Props) => {
+const RoomPage = () => {
   return (
-      <div>home</div>
+      <div>
+        <AddRoom />
+      </div>
   )
 }
 
