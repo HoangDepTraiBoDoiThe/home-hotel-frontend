@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {Room} from "../types";
 import {Button} from "../ui/button"
 
@@ -7,28 +7,34 @@ type Props = {
     setFilteredData: (data: Room[]) => void
 }
 
-const RoomType = (props: Props) => {
+const RoomType: React.FC<Props> = ({data, setFilteredData}) => {
     const [filter, setFilter] = useState("")
 
-    const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleFilterChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         setFilter(e.target.value)
-        const filteredRooms = props.data.filter(room => room.roomType === e.target.value)
-        props.setFilteredData(filteredRooms)
-    }
+        if (e.target.value === "all") {
+            setFilteredData(data)
+        } else {
+            const filteredRooms = data.filter(room => room.roomType === e.target.value)
+            setFilteredData(filteredRooms)
+        }
+    }, [data, setFilteredData]);
 
-    const clearFilter = () => {
+    const clearFilter = useCallback(() => {
         setFilter("")
-        props.setFilteredData(props.data)
-    }
+        setFilteredData(data)
+    }, [data, setFilteredData]);
 
-    const roomTypes = props.data.map((room) => room.roomType)
+    const uniqueRoomTypes = useMemo(() => {
+        return Array.from(new Set(data.map(room => room.roomType)))
+    }, [data])
 
     return (
         <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Room type</h2>
             <select onChange={handleFilterChange} value={filter} className="border p-2 rounded">
                 <option value="all">All</option>
-                {roomTypes.map((type, index) => (
+                {uniqueRoomTypes.map((type, index) => (
                     <option key={index} value={type}>{type}</option>)
                 )}
             </select>
@@ -37,4 +43,4 @@ const RoomType = (props: Props) => {
     );
 }
 
-export default RoomType
+export default React.memo(RoomType)
