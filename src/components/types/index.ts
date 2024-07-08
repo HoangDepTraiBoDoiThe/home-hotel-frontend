@@ -8,6 +8,7 @@ export interface Room {
     _links: {
         self: { href: string };
         getAllRooms: { href: string };
+        bookRoom: { href: string };
     };
 }
 
