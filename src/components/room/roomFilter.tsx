@@ -3,33 +3,35 @@ import {Room} from "../types";
 import {Button} from "../ui/button"
 
 type Props = {
-    filteredRooms: Room[],
-    setFilteredRooms: (filteredRooms: Room[]) => void
+    roomData: Room[],
+    setRoomData: (x: Room[]) => void
 }
 
-const RoomType: React.FC<Props> = ({filteredRooms, setFilteredRooms}) => {
+const RoomFilter: React.FC<Props> = ({roomData, setRoomData}) => {
     const [filter, setFilter] = useState("")
+    const [originData, setOriginData] = useState<Room[]>([])
 
     const handleFilterChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         setFilter(e.target.value)
+        setOriginData(roomData)
         if (e.target.value === "all") {
-            setFilteredRooms(filteredRooms)
+            setRoomData(originData)
         } else {
-            setFilteredRooms(filteredRooms.filter(room => room.roomType === e.target.value))
+            setRoomData(roomData.filter(room => room.roomType === e.target.value))
         }
-    }, [filteredRooms, setFilteredRooms]);
+    }, [roomData, setRoomData]);
 
     const clearFilter = useCallback(() => {
         setFilter("")
-        setFilteredRooms(filteredRooms)
-    }, [filteredRooms, setFilteredRooms]);
+        setRoomData(originData)
+    }, [roomData, setRoomData]);
 
     const uniqueRoomTypes = useMemo(() => {
-        return Array.from(new Set(filteredRooms.map(room => room.roomType)))
-    }, [filteredRooms])
+        return Array.from(new Set(roomData.map(room => room.roomType)))
+    }, [roomData])
 
     return (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-center gap-2">
             <h2 className="text-lg font-semibold">Room type</h2>
             <select onChange={handleFilterChange} value={filter} className="border p-2 rounded">
                 <option value="all">All</option>
@@ -42,4 +44,4 @@ const RoomType: React.FC<Props> = ({filteredRooms, setFilteredRooms}) => {
     );
 }
 
-export default React.memo(RoomType)
+export default React.memo(RoomFilter)

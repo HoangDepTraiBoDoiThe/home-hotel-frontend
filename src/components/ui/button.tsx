@@ -53,4 +53,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = "Button"
 
-export { Button, buttonVariants }
+type Props = {
+    pageNumber: number
+    variant: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | null | undefined
+    className?: string | undefined
+    onPaging: (page: number) => void
+}
+
+const PagingButton = (props: Props) => {
+    return (
+        <Button className={cn("bg-gray-200 group", props.className)} variant={props.variant} onClick={() => props.onPaging(props.pageNumber)}>
+            <span className={"text-black group-hover:text-white select-none"}>{props.pageNumber}</span>
+        </Button>
+    )
+}
+
+
+export { Button, buttonVariants, PagingButton }

@@ -1,34 +1,58 @@
-import React, {useEffect, useState} from "react";
-import RoomCard from "../components/room/roomCard.tsx";
-import {Room} from "../components/types";
-import {getAllRooms} from "../utils/ApiHelperFunctions.ts";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
+import { Room } from "../components/types";
+import { getAllRooms } from "../utils/ApiHelperFunctions";
+import RoomCardContainer from "../components/room/roomCardContainer";
+import RoomFilter from "../components/room/roomFilter";
+import RoomPaginator from "../components/room/roomPaginator";
 
-const HomePage = () => {
-    const [rooms, setRooms] = useState<Room[]>([])
+const HomePage: React.FC = () => {
+    const [rooms, setRooms] = useState<Room[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [numberRoomPerPage, setNumberRoomPerPage] = useState<number>(6);
 
-    async function fetchAllRooms() {
+    const fetchAllRooms = useCallback(async () => {
         try {
-            const rooms = await getAllRooms();
-            setRooms(rooms);
+            const fetchedRooms = await getAllRooms();
+            setRooms(fetchedRooms);
         } catch (error) {
-            console.error(error)
+            console.error("Failed to fetch rooms:", error);
+            // Consider adding user-friendly error handling here
         }
-    }
-
+    }, []);
 
     useEffect(() => {
-        fetchAllRooms()
-    }, []);
-    return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-3xl font-bold text-center mb-8">Available Rooms</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {rooms.map(room => (
-                    <RoomCard key={room.id} roomData={room}/>
-                ))}
-            </div>
-        </div>
-    )
-}
+        fetchAllRooms();
+    }, [fetchAllRooms]);
 
-export default HomePage
+    const totalPages = useMemo(() => Math.ceil(rooms.length / numberRoomPerPage), [rooms.length, numberRoomPerPage]);
+
+    const paginatedRooms = useMemo(() => {
+        const lastIndex = currentPage * numberRoomPerPage;
+        const firstIndex = lastIndex - numberRoomPerPage;
+        return rooms.slice(firstIndex, lastIndex);
+    }, [rooms, currentPage, numberRoomPerPage]);
+
+    const handlePageChange = useCallback((page: number) => {
+        setCurrentPage(page);
+    }, []);
+
+    const handleFilterChange = useCallback((filteredRooms: Room[]) => {
+        setRooms(filteredRooms);
+        setCurrentPage(1); // Reset to first page when filter changes
+    }, []);
+
+    return (
+        <section className="container mx-auto px-4 py-8">
+            <h1 className="text-3xl font-bold mb-6">Available Rooms</h1>
+            <RoomFilter roomData={rooms} setRoomData={handleFilterChange} />
+            <RoomPaginator
+                totalPages={totalPages}
+                onPaging={handlePageChange}
+                currentPage={currentPage}
+            />
+            <RoomCardContainer roomData={paginatedRooms} />
+        </section>
+    );
+};
+
+export default HomePage;

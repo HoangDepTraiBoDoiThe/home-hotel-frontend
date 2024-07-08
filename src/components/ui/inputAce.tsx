@@ -1,5 +1,4 @@
 // InputAce component extends from shadcnui - https://ui.shadcn.com/docs/components/input
-"use client";
 import * as React from "react";
 import {motion, useMotionTemplate, useMotionValue} from "framer-motion";
 import {cn} from "../../utils/lib/utils.ts";
