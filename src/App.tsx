@@ -4,6 +4,7 @@ import HomePage from "./App/homePage.tsx";
 import RoomPage from "./App/room/roomPage.tsx";
 
 import NavBar from "./components/Layout/navBar.tsx";
+import BookingPage from "./App/room/bookingPage.tsx";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/rooms" element={<RoomPage />} />
+        <Route path="/rooms/:id/booking" element={<BookingPage />} />
       </Routes>
     </div>
   );

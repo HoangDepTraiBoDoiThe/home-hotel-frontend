@@ -39,7 +39,7 @@ const RoomCard: React.FC<Props> = ({roomData : room}) => {
                 <Button
                     className="w-full"
                     disabled={room.booked}
-                    onClick={() => navigate(takeUri(room._links.bookRoom.href))}
+                    onClick={() => navigate(`rooms/${room.id}/booking`)}
                 >
                     {room.booked ? "Not Available" : "Book Now"}
                 </Button>

@@ -14,7 +14,7 @@ export interface Room {
 }
 
 export interface BookRoom {
-    bookData: Date;
+    bookDate: Date;
     returnDate: Date;
     adultCount: number;
     childrenCount: number;
