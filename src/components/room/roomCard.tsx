@@ -4,7 +4,6 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import { Button } from '../ui/button.tsx';
 import {Badge} from "../ui/badge.tsx";
 import {useNavigate} from "react-router-dom";
-import {takeUri} from "../../utils/lib/utils.ts";
 
 type Props = {
     roomData: Room
@@ -12,6 +11,12 @@ type Props = {
 
 const RoomCard: React.FC<Props> = ({roomData : room}) => {
     const navigate = useNavigate();
+
+    const handleOnClick = () => {
+        navigate(`rooms/${room.id}/booking`, {state: {
+                roomUrls: room._links
+            }})
+    }
 
     return (
         <Card className="w-full max-w-sm bg-white shadow-lg rounded-lg overflow-hidden transition-transform duration-300 ease-in-out hover:scale-105 z-1">
@@ -39,7 +44,7 @@ const RoomCard: React.FC<Props> = ({roomData : room}) => {
                 <Button
                     className="w-full"
                     disabled={room.booked}
-                    onClick={() => navigate(`rooms/${room.id}/booking`)}
+                    onClick={handleOnClick}
                 >
                     {room.booked ? "Not Available" : "Book Now"}
                 </Button>

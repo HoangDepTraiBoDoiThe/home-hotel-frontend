@@ -1,20 +1,20 @@
-import * as React from "react"
-import {format} from "date-fns"
-import {Calendar as CalendarIcon} from "lucide-react"
-import {Button} from "./button"
-import {cn} from "../../utils/lib/utils.ts";
-import {Popover, PopoverContent, PopoverTrigger} from "./popover.tsx"
-import {Calendar} from "./calendar.tsx";
-import {FormControl} from "./form.tsx";
-import {FieldValues} from "react-hook-form";
+import * as React from "react";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { Button } from "./button";
+import { cn } from "../../utils/lib/utils.ts";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover.tsx";
+import { Calendar } from "./calendar.tsx";
+import { FormControl } from "./form.tsx";
+import { FieldValues } from "react-hook-form";
 
 interface DatePickerFormProps {
-    field: FieldValues
-    className?: React.HTMLAttributes<HTMLDivElement>
-    disablePrevDates?: boolean
+    field: FieldValues;
+    className?: React.HTMLAttributes<HTMLDivElement>;
+    disablePrevDates?: boolean;
 }
 
-const DatePickerForm:React.FC<DatePickerFormProps> = ({field, disablePrevDates, className}) => {
+const DatePickerForm: React.FC<DatePickerFormProps> = ({ field, disablePrevDates, className }) => {
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -27,9 +27,9 @@ const DatePickerForm:React.FC<DatePickerFormProps> = ({field, disablePrevDates, 
                         )}
                     >
                         {field.value ? (
-                            format(field.value, "PPP")
+                            format(new Date(field.value), "PPPp")
                         ) : (
-                            <span>Pick a date</span>
+                            <span>Pick a date and time</span>
                         )}
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
@@ -50,7 +50,7 @@ const DatePickerForm:React.FC<DatePickerFormProps> = ({field, disablePrevDates, 
                 />
             </PopoverContent>
         </Popover>
-    )
-}
+    );
+};
 
-export default DatePickerForm
+export default DatePickerForm;

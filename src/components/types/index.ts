@@ -9,22 +9,29 @@ export interface Room {
     _links: {
         self: { href: string };
         getAllRooms: { href: string };
-        bookRoom: { href: string };
+        bookRoom: { href: string, method: HttpMethod };
     };
 }
 
 export interface BookRoom {
+    roomId: string;
     bookDate: Date;
     returnDate: Date;
     adultCount: number;
     childrenCount: number;
-    price: number;
-    confirmationCode: string
-    _links: {
+    price?: number;
+    confirmationCode?: string
+    _links?: {
         self: { href: string };
     };
 }
 
+// Routing
+export interface RoomURLs {
+    self: {href: string, method?: HttpMethod};
+    getAllRooms: {href: string, method?: HttpMethod};
+    bookRoom: { href: string, method?: HttpMethod };
+}
 
 // API
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
