@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {Form, FormControl, FormDescription, FormField, FormLabel, FormMessage} from '../../components/ui/form';
 import {FormItem} from "../../components/ui/form.tsx";
 import {Input} from "../../components/ui/input.tsx";
@@ -8,15 +8,15 @@ import {z} from "zod";
 import {Button} from "../../components/ui/button.tsx";
 import DatePickerForm from "../../components/ui/datePickerForm.tsx";
 import {BookRoom, Room, RoomURLs} from "../../components/types";
-import {bookARoom, fetchRoomByUrl} from "../../utils/ApiHelperFunctions.ts";
 import {useLocation, useParams} from "react-router-dom";
+import {useBookRoom, useRoomData} from "../../components/room/Booking/bookingCustomHooks.tsx";
 
 const BookingPage= () => {
     const location = useLocation()
     const roomUrls:RoomURLs = location.state?.roomUrls;
     const roomId = useParams().id;
+    const [roomData, isLoading] = useRoomData(roomUrls) as [Room, boolean]
 
-    const [roomData, setRoomData] = useState<Room>()
     const bookingSchema = z.object({
         bookDate: z.date(),
         adultCount: z.string(),
@@ -29,34 +29,23 @@ const BookingPage= () => {
         defaultValues: {}
     })
 
-    useEffect(() => {
-        async function fetchRoomData() {
-            fetchRoomByUrl(roomUrls.self.href || "").then((value) => setRoomData(value.data));
-        }
-        fetchRoomData()
-    }, [roomUrls.self.href]);
 
-    const onSubmit = async () => {
-        try {
-            const bookRoomData:BookRoom = {
-                roomId: roomId || "",
-                bookDate: form.getValues("bookDate"),
-                returnDate: form.getValues("returnDate"),
-                adultCount: Number.parseInt(form.getValues("adultCount")),
-                childrenCount: Number.parseInt(form.getValues("childrenCount")),
-            }
-            const response = await bookARoom<BookRoom>(roomData?._links.bookRoom.href || "", roomData?._links.bookRoom.method || "POST", bookRoomData)
-            console.log(response)
+    const Submit = async () => {
+        const bookRoomData:BookRoom = {
+            roomId: roomId || "",
+            bookDate: form.getValues("bookDate"),
+            returnDate: form.getValues("returnDate"),
+            adultCount: Number.parseInt(form.getValues("adultCount")),
+            childrenCount: Number.parseInt(form.getValues("childrenCount")),
         }
-        catch (e) {
-            console.error(e)
-        }
+        await useBookRoom(bookRoomData, roomData?._links)
     }
+    if (isLoading) return <div>Loading...</div>
     return (
         <div className={"flex flex-col w-full"}>
             <div className={"justify-center items-center flex"}>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 w-1/3">
+                    <form onSubmit={form.handleSubmit(Submit)} className="space-y-3 w-1/3">
                         <FormField
                             control={form.control}
                             name="bookDate"

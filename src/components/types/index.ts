@@ -41,7 +41,7 @@ export interface ApiError {
     status?: number;
 }
 
-export interface BookRoomResponse<T = never> {
+export interface RoomResponse<T = never> {
     data?: T,
     message: string,
     statusText: string
