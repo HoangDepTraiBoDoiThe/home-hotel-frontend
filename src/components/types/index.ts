@@ -6,6 +6,7 @@ export interface Room {
     roomPic: string | null;
     roomDescription: string;
     booked: boolean;
+    roomServices: [],
     _links: {
         self: { href: string };
         getAllRooms: { href: string };

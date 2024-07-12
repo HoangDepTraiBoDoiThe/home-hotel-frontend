@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, FormControl, FormDescription, FormField, FormLabel, FormMessage} from '../../components/ui/form';
+import {Form, FormControl, FormField, FormLabel, FormMessage} from '../../components/ui/form';
 import {FormItem} from "../../components/ui/form.tsx";
 import {Input} from "../../components/ui/input.tsx";
 import {useForm} from "react-hook-form";
@@ -9,11 +9,12 @@ import {Button} from "../../components/ui/button.tsx";
 import DatePickerForm from "../../components/ui/datePickerForm.tsx";
 import {BookRoom, Room, RoomURLs} from "../../components/types";
 import {useLocation, useParams} from "react-router-dom";
-import {useBookRoom, useRoomData} from "../../components/room/Booking/bookingCustomHooks.tsx";
+import {useBookRoom, useRoomData} from "../../components/room/booking/bookingCustomHooks.tsx";
+import RoomDetail from "../../components/room/commons/roomDeatail.tsx";
 
-const BookingPage= () => {
+const BookingPage = () => {
     const location = useLocation()
-    const roomUrls:RoomURLs = location.state?.roomUrls;
+    const roomUrls: RoomURLs = location.state?.roomUrls;
     const roomId = useParams().id;
     const [roomData, isLoading] = useRoomData(roomUrls) as [Room, boolean]
 
@@ -29,9 +30,8 @@ const BookingPage= () => {
         defaultValues: {}
     })
 
-
     const Submit = async () => {
-        const bookRoomData:BookRoom = {
+        const bookRoomData: BookRoom = {
             roomId: roomId || "",
             bookDate: form.getValues("bookDate"),
             returnDate: form.getValues("returnDate"),
@@ -42,10 +42,11 @@ const BookingPage= () => {
     }
     if (isLoading) return <div>Loading...</div>
     return (
-        <div className={"flex flex-col w-full"}>
-            <div className={"justify-center items-center flex"}>
+        <div className={"flex flex-col w-full container my-5"}>
+            <div className={"gap-4 justify-center flex flex-col sm:flex-row"}>
+                <RoomDetail roomData={roomData}/>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(Submit)} className="space-y-3 w-1/3">
+                    <form onSubmit={form.handleSubmit(Submit)} className="w-full space-y-3 overflow-hidden shadow-lg p-4 rounded-lg sm:w-1/2">
                         <FormField
                             control={form.control}
                             name="bookDate"
@@ -53,9 +54,7 @@ const BookingPage= () => {
                                 <FormItem className="flex flex-col">
                                     <FormLabel>Book date</FormLabel>
                                     <DatePickerForm field={field} disablePrevDates={true}/>
-                                    <FormDescription>
 
-                                    </FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}
@@ -67,9 +66,6 @@ const BookingPage= () => {
                                 <FormItem className="flex flex-col">
                                     <FormLabel>Return date</FormLabel>
                                     <DatePickerForm field={field} disablePrevDates={true}/>
-                                    <FormDescription>
-
-                                    </FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}
