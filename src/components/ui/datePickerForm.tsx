@@ -27,7 +27,7 @@ const DatePickerForm: React.FC<DatePickerFormProps> = ({ field, disablePrevDates
                         )}
                     >
                         {field.value ? (
-                            format(new Date(field.value), "PPPp")
+                            format(new Date(field.value), "PPP")
                         ) : (
                             <span>Pick a date and time</span>
                         )}

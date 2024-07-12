@@ -1,18 +1,19 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../ui/card";
-import { BookRoom, Room } from "../../types";
+import {BookRoomRequest, Room} from "../../types";
 import { Badge } from "../../ui/badge";
 import { Button } from "../../ui/button";
 import { useBookRoom } from "./bookingCustomHooks";
 import {BookingDetailItem} from "./bookingDetailItem.tsx";
+import {Separator} from "@radix-ui/react-select";
 
 type Props = {
-    bookRoomData?: BookRoom;
+    bookRoomRequestData?: BookRoomRequest;
     roomData: Room;
 };
 
-const BookingSummary: React.FC<Props> = ({ bookRoomData, roomData }) => {
-    const { bookRoom, isLoading, error, response } = useBookRoom(roomData?._links, bookRoomData);
+const BookingSummary: React.FC<Props> = ({ bookRoomRequestData, roomData }) => {
+    const { bookRoom, isLoading, error, response } = useBookRoom(roomData?._links, bookRoomRequestData);
 
     function onSubmit() {
         bookRoom()
@@ -29,18 +30,19 @@ const BookingSummary: React.FC<Props> = ({ bookRoomData, roomData }) => {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                {bookRoomData && (
+                {bookRoomRequestData && (
                     <>
-                        <BookingDetailItem label="Book date" value={bookRoomData.bookDate} />
-                        <BookingDetailItem label="Return date" value={bookRoomData.returnDate} />
-                        <BookingDetailItem label="Temporary price" value={bookRoomData.price} />
-                        <BookingDetailItem label="Adult" value={bookRoomData.adultCount} />
-                        <BookingDetailItem label="Children" value={bookRoomData.childrenCount} />
+                        <BookingDetailItem label="Book date" value={bookRoomRequestData.bookDate} />
+                        <BookingDetailItem label="Return date" value={bookRoomRequestData.returnDate} />
+                        <BookingDetailItem label="Number of adult" value={bookRoomRequestData.adultCount} />
+                        <BookingDetailItem label="Number of children" value={bookRoomRequestData.childrenCount} />
+                        <Separator className={"border-t-2 mb-5"}/>
+                        <BookingDetailItem label="Temporary price" value={`$${bookRoomRequestData.tempPrice}`} />
                     </>
                 )}
             </CardContent>
             <CardFooter>
-                {bookRoomData && (
+                {bookRoomRequestData && (
                     <Button className={"w-full"} onClick={onSubmit} disabled={isLoading}>
                         {isLoading ? 'Booking...' : 'Book this room'}
                     </Button>

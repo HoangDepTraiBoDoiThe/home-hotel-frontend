@@ -14,7 +14,7 @@ export interface Room {
     };
 }
 
-export interface BookRoom {
+export interface BookRoomResponse {
     roomId: string;
     bookDate: Date;
     returnDate: Date;
@@ -25,6 +25,13 @@ export interface BookRoom {
     _links?: {
         self: { href: string };
     };
+}export interface BookRoomRequest {
+    roomId: string;
+    bookDate: Date;
+    returnDate: Date;
+    adultCount: number;
+    childrenCount: number;
+    tempPrice: number;
 }
 
 // Routing

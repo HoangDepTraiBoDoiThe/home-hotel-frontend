@@ -1,5 +1,5 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {ApiError, BookRoom, RoomResponse, HttpMethod, Room, RoomRequest} from "../components/types";
+import {ApiError, BookRoomResponse, RoomResponse, HttpMethod, Room, RoomRequest} from "../components/types";
 import {takeUri} from "./lib/utils.ts";
 
 export const api = axios.create({
@@ -64,7 +64,7 @@ export const createNewRoom = async (roomRequest: RoomRequest): Promise<Room> => 
     }
 }
 
-export async function bookARoom<T = never>(ApiUrl: string, method: HttpMethod, data: BookRoom): Promise<RoomResponse<T>> {
+export async function bookARoom<T = never>(ApiUrl: string, method: HttpMethod, data: BookRoomResponse): Promise<RoomResponse<T>> {
     let response: AxiosResponse<T>;
     const uri = takeUri(ApiUrl)
     try {

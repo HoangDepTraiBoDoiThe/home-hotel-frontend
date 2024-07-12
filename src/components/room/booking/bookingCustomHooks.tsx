@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useReducer, useState} from "react";
-import {BookRoom, Room, RoomResponse, RoomURLs} from "../../types";
+import {BookRoomRequest, BookRoomResponse, Room, RoomResponse, RoomURLs} from "../../types";
 import {bookARoom, fetchRoomByUrl} from "../../../utils/ApiHelperFunctions.ts";
 import {toast} from "../../ui/use-toast.ts";
 
@@ -48,7 +48,7 @@ const bookingReducer = (state: BookingState, action: BookingAction): BookingStat
     }
 };
 
-export const useBookRoom = (bookLink: RoomURLs, roomData?: BookRoom) => {
+export const useBookRoom = (bookLink: RoomURLs, roomData?: BookRoomRequest) => {
     const [state, dispatch] = useReducer(bookingReducer, {
         isLoading: false,
         error: null,

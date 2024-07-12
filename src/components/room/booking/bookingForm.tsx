@@ -11,14 +11,15 @@ type Props = {
         returnDate: Date
         adultCount: string
         childrenCount: string
-    }, any, undefined>,
-    onSubmit: ()=>void
+    }, undefined>,
+    onSubmit: ()=>void,
+    onChange: ()=>void
 }
 
-const BookingForm: React.FC<Props> = ({form, onSubmit:Submit}) => {
+const BookingForm: React.FC<Props> = ({form, onSubmit:Submit, onChange}) => {
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(Submit)}
+            <form onChange={onChange} onSubmit={form.handleSubmit(Submit)}
                   className="w-full space-y-3 overflow-hidden shadow-lg p-4 rounded-lg">
                 <FormField
                     control={form.control}
