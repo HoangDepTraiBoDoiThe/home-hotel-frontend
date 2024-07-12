@@ -1,28 +1,14 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import {Room} from "../../components/types";
-import {getAllRooms} from "../../utils/ApiHelperFunctions.ts";
 import RoomFilter from "../../components/room/roomFilter.tsx";
 import RoomPaginator from "../../components/room/roomPaginator.tsx";
 import RoomCardContainer from "../../components/room/roomCardContainer.tsx";
+import {useRoomsData} from "../../components/room/commons/roomCustomHooks.tsx";
 
 const RoomPage: React.FC = () => {
-    const [rooms, setRooms] = useState<Room[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [numberRoomPerPage, setNumberRoomPerPage] = useState<number>(6);
-
-    const fetchAllRooms = useCallback(async () => {
-        try {
-            const fetchedRooms = await getAllRooms();
-            setRooms(fetchedRooms);
-        } catch (error) {
-            console.error("Failed to fetch rooms:", error);
-            // Consider adding user-friendly error handling here
-        }
-    }, []);
-
-    useEffect(() => {
-        fetchAllRooms();
-    }, [fetchAllRooms]);
+    const [rooms] = useRoomsData();
 
     const totalPages = useMemo(() => Math.ceil(rooms.length / numberRoomPerPage), [rooms.length, numberRoomPerPage]);
 
@@ -37,7 +23,7 @@ const RoomPage: React.FC = () => {
     }, []);
 
     const handleFilterChange = useCallback((filteredRooms: Room[]) => {
-        setRooms(filteredRooms);
+        //setRooms(filteredRooms);
         setCurrentPage(1); // Reset to first page when filter changes
     }, []);
 

@@ -1,7 +1,23 @@
 import {useCallback, useEffect, useReducer, useState} from "react";
 import {BookRoomRequest, BookRoomResponse, Room, RoomResponse, RoomURLs} from "../../types";
-import {bookARoom, fetchRoomByUrl} from "../../../utils/ApiHelperFunctions.ts";
+import {bookARoom, fetchRoomByUrl, getAllRooms} from "../../../utils/ApiHelperFunctions.ts";
 import {toast} from "../../ui/use-toast.ts";
+
+export const useRoomsData = () => {
+    const [rooms, setRooms] = useState<Room[]>([]);
+    useEffect(() => {
+        const fetchAllRooms = async () => {
+            try {
+                const fetchedRooms = await getAllRooms();
+                setRooms(fetchedRooms);
+            } catch (error) {
+                console.error("Failed to fetch rooms:", error);
+            }
+        }
+        fetchAllRooms()
+    }, []);
+    return [rooms]
+}
 
 export const useRoomData = (roomUrls: RoomURLs) => {
     const [isLoading, setIsLoading] = useState<boolean>(true)

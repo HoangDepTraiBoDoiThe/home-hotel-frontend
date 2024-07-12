@@ -6,14 +6,17 @@ import {BookRoomRequest, BookRoomResponse, Room, RoomURLs} from "../../component
 import {useLocation, useParams} from "react-router-dom";
 import RoomDetail from "../../components/room/commons/roomDetailCard.tsx";
 import BookingSummary from "../../components/room/booking/bookingSummary.tsx";
-import {useRoomData} from "../../components/room/booking/bookingCustomHooks.tsx";
+import {useRoomData, useRoomsData} from "../../components/room/commons/roomCustomHooks.tsx";
 import BookingForm from "../../components/room/booking/bookingForm.tsx";
+import RoomCarousel from "../../components/room/commons/roomCarousel.tsx";
+import {Separator} from "@radix-ui/react-select";
 
 const BookingPage = () => {
     const location = useLocation()
     const roomUrls: RoomURLs = location.state?.roomUrls;
     const roomId = useParams().id;
-    const [roomData, isLoading] = useRoomData(roomUrls) as [Room, boolean]
+    const [roomData, isLoading] = useRoomData(roomUrls) as [Room, boolean];
+    const [rooms] = useRoomsData()
     const [bookRoomRequestData, setBookRoomRequestData] = useState<BookRoomRequest>()
 
     const bookingSchema = z.object({
@@ -51,11 +54,16 @@ const BookingPage = () => {
 
     if (isLoading) return <div>Loading...</div>
     return (
-        <div className={"flex flex-col w-full container my-5"}>
+        <div className={"flex flex-col w-full container my-5 space-y-10"}>
             <div className={"gap-4 justify-between flex flex-col sm:flex-row"}>
                 <RoomDetail roomData={roomData}/>
                 <BookingForm form={form} onChange={onChange} onSubmit={Submit}/>
                 <BookingSummary roomData={roomData} bookRoomRequestData={bookRoomRequestData}/>
+            </div>
+            <div className={"items-center content-center flex flex-col mt-2"}>
+                <Separator className={"border-t-2 w-full"}/>
+                <h2 className={"text-2xl font-semibold p-3"}>Other Rooms</h2>
+                <RoomCarousel roomsData={rooms} className={""}/>
             </div>
         </div>
     )

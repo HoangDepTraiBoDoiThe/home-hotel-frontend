@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import {BookRoomRequest, Room} from "../../types";
 import { Badge } from "../../ui/badge";
 import { Button } from "../../ui/button";
-import { useBookRoom } from "./bookingCustomHooks";
+import { useBookRoom } from "../commons/roomCustomHooks.tsx";
 import {BookingDetailItem} from "./bookingDetailItem.tsx";
 import {Separator} from "@radix-ui/react-select";
 
