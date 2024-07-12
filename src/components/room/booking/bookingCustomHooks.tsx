@@ -1,6 +1,7 @@
-import {useEffect, useState} from "react";
-import {BookRoom, Room, RoomURLs} from "../../types";
+import {useCallback, useEffect, useReducer, useState} from "react";
+import {BookRoom, Room, RoomResponse, RoomURLs} from "../../types";
 import {bookARoom, fetchRoomByUrl} from "../../../utils/ApiHelperFunctions.ts";
+import {toast} from "../../ui/use-toast.ts";
 
 export const useRoomData = (roomUrls: RoomURLs) => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -26,20 +27,54 @@ export const useRoomData = (roomUrls: RoomURLs) => {
     return [roomData, isLoading, roomError]
 };
 
-export const useBookRoom = async (roomData: BookRoom, bookLink:RoomURLs) => {
-    const [bookingError, setBookingError] = useState<string | unknown>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+type BookingState = {
+    isLoading: boolean;
+    error: Error | null;
+    response: RoomResponse | null;
+};
 
-    try {
-        setIsLoading(true)
-        await bookARoom(bookLink.bookRoom.href, bookLink.bookRoom.method || "POST", roomData);
-    } catch (err) {
-        setBookingError(err)
-        console.error(err)
-    }
-    finally {
-        setIsLoading(false)
-    }
+type BookingAction = | { type: 'BOOKING_START' } | { type: 'BOOKING_SUCCESS'; payload: RoomResponse } | { type: 'BOOKING_ERROR'; payload: Error };
 
-    return [bookingError, isLoading]
+const bookingReducer = (state: BookingState, action: BookingAction): BookingState => {
+    switch (action.type) {
+        case 'BOOKING_START':
+            return { ...state, isLoading: true, error: null };
+        case 'BOOKING_SUCCESS':
+            return { ...state, isLoading: false, response: action.payload };
+        case 'BOOKING_ERROR':
+            return { ...state, isLoading: false, error: action.payload };
+        default:
+            return state;
+    }
+};
+
+export const useBookRoom = (bookLink: RoomURLs, roomData?: BookRoom) => {
+    const [state, dispatch] = useReducer(bookingReducer, {
+        isLoading: false,
+        error: null,
+        response: null,
+    });
+
+    const bookRoom = useCallback(async () => {
+        if (!roomData) return;
+
+        dispatch({ type: 'BOOKING_START' });
+
+        try {
+            const result = await bookARoom(bookLink.bookRoom.href, bookLink.bookRoom.method || 'POST', roomData);
+            dispatch({ type: 'BOOKING_SUCCESS', payload: result });
+            toast({
+                title: result.status === 200 ? 'Room booked successfully' : 'Failed to book room',
+                variant: result.status === 200 ? 'default' : 'destructive',
+            });
+        } catch (err) {
+            dispatch({ type: 'BOOKING_ERROR', payload: err instanceof Error ? err : new Error('An unknown error occurred') });
+            console.error(err);
+        }
+    }, [bookLink, roomData]);
+
+    return {
+        bookRoom,
+        ...state,
+    };
 };

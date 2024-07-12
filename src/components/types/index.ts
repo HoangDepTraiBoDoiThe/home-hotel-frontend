@@ -45,7 +45,7 @@ export interface ApiError {
 export interface RoomResponse<T = never> {
     data?: T,
     message: string,
-    statusText: string
+    status: number
 }
 
 export interface RoomRequest {

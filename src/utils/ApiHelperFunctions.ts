@@ -26,7 +26,7 @@ export async function fetchRoomByUrl<T = never>(url : string): Promise<RoomRespo
         return {
             data: response.data,
             message: response.statusText,
-            statusText: response.statusText
+            status: response.status
         }
     } catch (error) {
         const apiError: ApiError = {
@@ -39,7 +39,7 @@ export async function fetchRoomByUrl<T = never>(url : string): Promise<RoomRespo
         else if (error instanceof Error) {
             apiError.message = error.message;
         }
-        return {message: `Error: ${apiError.message}`, statusText: `${apiError.status}`};
+        return {message: `Error: ${apiError.message}`, status: apiError.status || 500};
     }
 }
 
@@ -88,7 +88,7 @@ export async function bookARoom<T = never>(ApiUrl: string, method: HttpMethod, d
         return {
             data: response.data,
             message: response.statusText,
-            statusText: response.statusText
+            status: response.status
         }
     } catch (error) {
         const apiError: ApiError = {
@@ -100,6 +100,6 @@ export async function bookARoom<T = never>(ApiUrl: string, method: HttpMethod, d
         } else if (error instanceof Error) {
             apiError.message = error.message;
         }
-        return {message: `Error: ${apiError.message}`, statusText: `${apiError.status}`};
+        return {message: `Error: ${apiError.message}`, status: apiError.status || 500};
     }
 }

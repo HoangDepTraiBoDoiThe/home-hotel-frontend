@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {Form, FormControl, FormField, FormLabel, FormMessage} from '../../components/ui/form';
 import {FormItem} from "../../components/ui/form.tsx";
 import {Input} from "../../components/ui/input.tsx";
@@ -9,14 +9,16 @@ import {Button} from "../../components/ui/button.tsx";
 import DatePickerForm from "../../components/ui/datePickerForm.tsx";
 import {BookRoom, Room, RoomURLs} from "../../components/types";
 import {useLocation, useParams} from "react-router-dom";
-import {useBookRoom, useRoomData} from "../../components/room/booking/bookingCustomHooks.tsx";
-import RoomDetail from "../../components/room/commons/roomDeatail.tsx";
+import RoomDetail from "../../components/room/commons/roomDetailCard.tsx";
+import BookingSummary from "../../components/room/booking/bookingSummary.tsx";
+import {useRoomData} from "../../components/room/booking/bookingCustomHooks.tsx";
 
 const BookingPage = () => {
     const location = useLocation()
     const roomUrls: RoomURLs = location.state?.roomUrls;
     const roomId = useParams().id;
     const [roomData, isLoading] = useRoomData(roomUrls) as [Room, boolean]
+    const [bookRoomData, setBookRoomData] = useState<BookRoom>()
 
     const bookingSchema = z.object({
         bookDate: z.date(),
@@ -38,15 +40,15 @@ const BookingPage = () => {
             adultCount: Number.parseInt(form.getValues("adultCount")),
             childrenCount: Number.parseInt(form.getValues("childrenCount")),
         }
-        await useBookRoom(bookRoomData, roomData?._links)
+        setBookRoomData(bookRoomData)
     }
     if (isLoading) return <div>Loading...</div>
     return (
         <div className={"flex flex-col w-full container my-5"}>
-            <div className={"gap-4 justify-center flex flex-col sm:flex-row"}>
+            <div className={"gap-4 justify-between flex flex-col sm:flex-row"}>
                 <RoomDetail roomData={roomData}/>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(Submit)} className="w-full space-y-3 overflow-hidden shadow-lg p-4 rounded-lg sm:w-1/2">
+                    <form onSubmit={form.handleSubmit(Submit)} className="w-full space-y-3 overflow-hidden shadow-lg p-4 rounded-lg">
                         <FormField
                             control={form.control}
                             name="bookDate"
@@ -99,6 +101,7 @@ const BookingPage = () => {
                         <Button className={"w-full"} type="submit">Submit</Button>
                     </form>
                 </Form>
+                <BookingSummary roomData={roomData} bookRoomData={bookRoomData}/>
             </div>
         </div>
     )

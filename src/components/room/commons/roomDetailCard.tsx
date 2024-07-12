@@ -11,7 +11,7 @@ interface Props {
 
 const RoomDetail: React.FC<Props> = ({ roomData }) => {
     return (
-        <Card className="overflow-hidden shadow-lg h-full">
+        <Card className="overflow-hidden shadow-lg h-full w-full">
             <div className="relative h-48 overflow-hidden">
                 <img
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
