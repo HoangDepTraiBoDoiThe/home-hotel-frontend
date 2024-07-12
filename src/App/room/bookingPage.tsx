@@ -12,6 +12,7 @@ import {useLocation, useParams} from "react-router-dom";
 import RoomDetail from "../../components/room/commons/roomDetailCard.tsx";
 import BookingSummary from "../../components/room/booking/bookingSummary.tsx";
 import {useRoomData} from "../../components/room/booking/bookingCustomHooks.tsx";
+import BookingForm from "../../components/room/booking/bookingForm.tsx";
 
 const BookingPage = () => {
     const location = useLocation()
@@ -47,60 +48,7 @@ const BookingPage = () => {
         <div className={"flex flex-col w-full container my-5"}>
             <div className={"gap-4 justify-between flex flex-col sm:flex-row"}>
                 <RoomDetail roomData={roomData}/>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(Submit)} className="w-full space-y-3 overflow-hidden shadow-lg p-4 rounded-lg">
-                        <FormField
-                            control={form.control}
-                            name="bookDate"
-                            render={({field}) => (
-                                <FormItem className="flex flex-col">
-                                    <FormLabel>Book date</FormLabel>
-                                    <DatePickerForm field={field} disablePrevDates={true}/>
-
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="returnDate"
-                            render={({field}) => (
-                                <FormItem className="flex flex-col">
-                                    <FormLabel>Return date</FormLabel>
-                                    <DatePickerForm field={field} disablePrevDates={true}/>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="adultCount"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Adult count</FormLabel>
-                                    <FormControl>
-                                        <Input min={1} type={"number"} {...field} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="childrenCount"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Children count</FormLabel>
-                                    <FormControl>
-                                        <Input min={0} type={"number"} {...field} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                        <Button className={"w-full"} type="submit">Submit</Button>
-                    </form>
-                </Form>
+                <BookingForm form={form} onSubmit={Submit}/>
                 <BookingSummary roomData={roomData} bookRoomData={bookRoomData}/>
             </div>
         </div>
